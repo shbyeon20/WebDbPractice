@@ -38,11 +38,11 @@ public class Member {
         this.password = password;
     }
 
-    public String getMarketing_yn() {
+    public boolean getMarketing_yn() {
         return marketing_yn;
     }
 
-    public void setMarketing_yn(String marketing_yn) {
+    public void setMarketing_yn(boolean marketing_yn) {
         this.marketing_yn = marketing_yn;
     }
 
@@ -54,6 +54,6 @@ public class Member {
         this.register_date = register_date;
     }
 
-    String marketing_yn;
+    boolean marketing_yn;
     String register_date;
 }

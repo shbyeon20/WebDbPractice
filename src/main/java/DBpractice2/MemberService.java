@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DbService {
+public class MemberService {
 
     public void Dbdelete() {
         String url = "jdbc:mariadb://localhost:3306/test1";
@@ -165,7 +165,7 @@ public class DbService {
         try {
             connection = DriverManager.getConnection(url, user, DBpassword);
 
-            String sql = "select name, email, password\n" +
+            String sql = "select name, email, marketing_yn,register_date\n" +
                     "from zerobase_member1 zm \n" +
                     "where marketing_yn = ? " +
                     ";";
@@ -178,12 +178,12 @@ public class DbService {
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
                 String email = resultSet.getString("email");
-                String password = resultSet.getString("password");
+                String register_date = resultSet.getString("register_date");
 
                 Member member = new Member();
                 member.setName(name);
                 member.setEmail(email);
-                member.setPassword(password);
+                member.setRegister_date(register_date);
                 memberList.add(member);
 
             }
@@ -217,6 +217,80 @@ public class DbService {
 
         }
         return memberList;
+    }
+
+    public Member getMember(String userEmail) {
+
+        Member selectedMember = null;
+
+        String url = "jdbc:mariadb://localhost:3306/test1";
+        String user = "testuser1";
+        String DBpassword = "!tkdghk6226";
+
+        String marketingValue = "1";
+        String nameValue = "변상화";
+
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try {
+            connection = DriverManager.getConnection(url, user, DBpassword);
+
+            String sql = "select name, email,mobile_no ,password, marketing_yn,register_date \n" +
+                    "from zerobase_member1 zm \n" +
+                    "where email = ?";
+
+            preparedStatement = connection.prepareStatement(sql); // sql String을 url에서 조작하는 것을 방지하기 위해서 조건절값 코드 내 숨기기
+            preparedStatement.setString(1, userEmail); // 1. sql문의 ?에 해당 값이 입력됨
+
+
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                selectedMember = new Member();
+                selectedMember.setName(resultSet.getString("name"));
+                selectedMember.setEmail(resultSet.getString("email"));
+                selectedMember.setPassword(resultSet.getString("password"));
+                selectedMember.setMobile_no(resultSet.getString("mobile_no"));
+                selectedMember.setRegister_date(resultSet.getString("register_date"));
+                selectedMember.setMarketing_yn(resultSet.getBoolean("marketing_yn"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+
+            try {
+                if (resultSet != null && !resultSet.isClosed()) {
+                    resultSet.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
+                if (preparedStatement != null && !preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }
+        return selectedMember;
+
     }
 }
 

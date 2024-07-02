@@ -1,10 +1,11 @@
-<%@ page import="DBpractice2.DbService" %>
+<%@ page import="DBpractice2.MemberService" %>
 <%@ page import="DBpractice2.Member" %>
 <%@ page import="java.util.List" %>
+<%@ page import="DBpractice2.MemberService" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<% DbService dbService = new DbService();
-    List<Member> members = dbService.memberList();%>
+<% MemberService memberService = new MemberService();
+    List<Member> members = memberService.memberList();%>
 
 <!DOCTYPE html>
 <html>
@@ -21,13 +22,13 @@
     </style>
 </head>
 <body>
-<h1> 회원 목록</h1>
+<h1>마케팅 수신동의 회원목록</h1>
 <table>
     <thead>
     <tr>
         <th>이름</th>
         <th>이메일</th>
-        <th>비밀번호</th>
+        <th>가입일자</th>
     </tr>
     </thead>
     <tbody>
@@ -39,11 +40,11 @@
     <tr>
         <td><%=member.getName()%></td>
         <td>
-            <a href = "detail.jsp?userID=<%=member.getEmail()%>">
+            <a href = "detail.jsp?userEmail=<%=member.getEmail()%>">
                <%=member.getEmail()%>
             </a>
         </td>
-        <td><%=member.getPassword()%></td>
+        <td><%=member.getRegister_date()%></td>
     </tr>
     <%
         }
